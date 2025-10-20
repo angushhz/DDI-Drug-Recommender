@@ -15,22 +15,22 @@ from utils.logger import Logger
 parser = argparse.ArgumentParser()
 
 # Required parameters
-parser.add_argument("--model_name", 
-                    default='leader', 
-                    type=str, 
+parser.add_argument("--model_name",
+                    default='leader',
+                    type=str,
                     choices=["leader"],
                     help="model name")
-parser.add_argument("--dataset", 
-                    default="eicu", 
-                    choices=['eicu', 'mimic3', 'mimic4'], 
+parser.add_argument("--dataset",
+                    default="eicu",
+                    choices=['eicu', 'mimic3', 'mimic4'],
                     help="Choose the dataset")
-parser.add_argument("--demo", 
-                    default=False, 
-                    action='store_true', 
+parser.add_argument("--demo",
+                    default=False,
+                    action='store_true',
                     help='whether run demo')
-parser.add_argument("--train_file", 
-                    default='record_final.pkl', 
-                    type=str, 
+parser.add_argument("--train_file",
+                    default='record_final.pkl',
+                    type=str,
                     required=False,
                     help="training data file.")
 parser.add_argument("--filter",
@@ -52,7 +52,7 @@ parser.add_argument("--check_path",
                     help="the save path of checkpoints for different running")
 
 # Other parameters
-parser.add_argument("--freeze", 
+parser.add_argument("--freeze",
                     default=False,
                     action="store_true",
                     help="Whether freeze some layers of the model for finetuning")
@@ -138,7 +138,7 @@ parser.add_argument('--num_workers',
                     default=0,
                     type=int,
                     help='The number of workers in dataloader')
-parser.add_argument("--log", 
+parser.add_argument("--log",
                     default=False,
                     action="store_true",
                     help="whether create a new log file")
@@ -180,7 +180,7 @@ parser.add_argument("--alpha",
                     default=0.1,
                     type=float,
                     help="The weight to adjust distillation loss.")
-parser.add_argument("--medrec_path", 
+parser.add_argument("--medrec_path",
                     default="./saved/mimic3/pnet",
                     type=str,
                     help="The save path for medication recommendation model")
