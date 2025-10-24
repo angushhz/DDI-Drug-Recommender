@@ -11,7 +11,7 @@ You can implement our model according to the following steps:
 3. Install the necessary packages. Run the command:
 
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements_fi.txt
    ```
 4. First, train the large language model for medication recommendation via the command:
 
