@@ -1,7 +1,7 @@
 accelerate==0.21.0
 apex
 auto_mix_prep
-bitsandbytes
+bitsandbytes==0.42.0
 datasets
 deepspeed
 dill
