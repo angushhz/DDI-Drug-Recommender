@@ -69,7 +69,10 @@ def train():
     model = LlamaForMedRec.from_pretrained(
         model_args.model_name_or_path,
         med_voc=len(ehr_tokenizer.med_voc.word2idx),
-    ).half().cuda()
+        # TODO: add device map and torch dtype for colab
+        device_map="auto",
+        torch_dtype=torch.float16,
+    )
 
     if model_args.peft_path is not None:    # for test model
         # Resume_training
