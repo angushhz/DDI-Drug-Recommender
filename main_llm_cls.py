@@ -118,8 +118,7 @@ def train():
     raw_datasets = load_dataset(
         "json",
         data_files=data_files,
-        cache_dir=model_args.cache_dir,
-        use_auth_token=True if model_args.use_auth_token else None,
+        cache_dir=model_args.cache_dir
     )
     print("raw_datasets: ", raw_datasets)
 
