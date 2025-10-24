@@ -12,8 +12,9 @@ wandb/
 *.png
 png/
 saved/
+env
 figure/
-!requirements.txt
+!requirements_fi.txt
 *.model
 *.bin
 *.pdf
@@ -21,3 +22,4 @@ figure/
 *.safetensors
 *.arrow
 backup/
+data
