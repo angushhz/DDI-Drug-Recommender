@@ -1,4 +1,4 @@
-accelerate
+accelerate==0.21.0
 apex
 auto_mix_prep
 bitsandbytes
@@ -7,7 +7,6 @@ deepspeed
 dill
 fairscale
 huggingface_hub
-intel_extension_for_pytorch
 jieba
 jsonlines
 nltk
@@ -19,8 +18,9 @@ ray
 rdkit
 Requests
 rouge_chinese
-torch_xla
 tqdm
-transformers==4.28.1
-trl
+transformers==4.36.2
+trl==0.4.7
 wandb
+tokenizers==0.13.0
+peft==0.10.0

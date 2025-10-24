@@ -1,6 +1,7 @@
 # here put the import lib
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "4,5,6,7"
+# comment out for colab
+# os.environ["CUDA_VISIBLE_DEVICES"] = "4,5,6,7"
 import json
 import torch
 from torch.utils.data import DataLoader
@@ -34,7 +35,7 @@ import time
 
 # save model for PeftModel
 class SavePeftModelCallback(TrainerCallback):
-    def on_save(    
+    def on_save(
         self,
         args: TrainingArguments,
         state: TrainerState,
@@ -52,7 +53,7 @@ class SavePeftModelCallback(TrainerCallback):
             if os.path.exists(pytorch_model_path):
                 os.remove(pytorch_model_path)
             return control
-        
+
 
 def train():
 
@@ -129,9 +130,9 @@ def train():
         target_dataset = raw_datasets["test"]
         # preprocess_func = llama_eval_cls(data_args, model_args, tokenizer, ehr_tokenizer)
         column_names = raw_datasets["test"].column_names
-        # data_collator = DataCollatorForSeq2Seq(tokenizer, model=model, label_pad_token_id=tokenizer.pad_token_id, 
+        # data_collator = DataCollatorForSeq2Seq(tokenizer, model=model, label_pad_token_id=tokenizer.pad_token_id,
         #                                        pad_to_multiple_of=None, padding=False)
-    
+
     preprocess_func = llama_train_cls(data_args, model_args, tokenizer, ehr_tokenizer)
     data_collator = LongestSequenceCollator(tokenizer)
 
@@ -184,7 +185,7 @@ def train():
                 # max_tokens=512,
                 # max_new_tokens=data_args.max_target_length,
                 # do_sample=True,
-                # top_p=0.7,     
+                # top_p=0.7,
                 # temperature=0.95,
                 # repetition_penalty=1.1
             )
