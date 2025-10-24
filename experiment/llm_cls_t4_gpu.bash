@@ -9,7 +9,7 @@ your_checkpopint_path="saved"  # 填入用来存储模型的路径
 MAX_STEPS=3000
 MASTER_PORT=$(shuf -n 1 -i 10000-65535)
 date="0105"
-MAX_SOURCE_LENGTH=1024
+MAX_SOURCE_LENGTH=512
 
 peft_path=""  # 如果之前训练过，且存储了peft权重，则设置为peft权重的文件夹路径
 
@@ -26,7 +26,7 @@ deepspeed --num_gpus=1 --master_port $MASTER_PORT main_llm_cls.py \
     --output_dir $your_checkpopint_path/lora-$date \
     --overwrite_output_dir \
     --max_source_length $MAX_SOURCE_LENGTH \
-    --max_target_length 196 \
+    --max_target_length 128 \
     --per_device_train_batch_size 1 \
     --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 2 \
@@ -41,7 +41,7 @@ deepspeed --num_gpus=1 --master_port $MASTER_PORT main_llm_cls.py \
     --fp16
 
 # Testing Command
-deepspeed --num_gpus=4 --master_port $MASTER_PORT main_llm_cls.py \
+deepspeed --num_gpus=1 --master_port $MASTER_PORT main_llm_cls.py \
     --do_predict \
     --test_file $your_data_path/test_0105.json \
     --cache_dir $your_data_path \
@@ -54,4 +54,4 @@ deepspeed --num_gpus=4 --master_port $MASTER_PORT main_llm_cls.py \
     --overwrite_output_dir \
     --max_source_length $MAX_SOURCE_LENGTH \
     --max_target_length 196 \
-    --per_device_eval_batch_size 4
+    --per_device_eval_batch_size 1
