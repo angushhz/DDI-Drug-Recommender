@@ -21,5 +21,4 @@ tqdm
 transformers==4.36.2
 trl==0.4.7
 wandb
-tokenizers==0.13.0
 peft==0.10.0
