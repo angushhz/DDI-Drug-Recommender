@@ -9,7 +9,7 @@ your_checkpopint_path="saved"  # 填入用来存储模型的路径
 MAX_STEPS=3000
 MASTER_PORT=$(shuf -n 1 -i 10000-65535)
 date="0105"
-MAX_SOURCE_LENGTH=512
+MAX_SOURCE_LENGTH=1024
 
 peft_path=""  # 如果之前训练过，且存储了peft权重，则设置为peft权重的文件夹路径
 
@@ -17,7 +17,7 @@ peft_path=""  # 如果之前训练过，且存储了peft权重，则设置为pef
 deepspeed --num_gpus=1 --master_port $MASTER_PORT main_llm_cls.py \
     --deepspeed llm/ds.config \
     --do_train \
-    --train_file $your_data_path/train_0105.json \
+    --train_file $your_data_path/train_0104.json \
     --cache_dir $your_data_path \
     --prompt_column input \
     --response_column drug_code \
@@ -26,9 +26,9 @@ deepspeed --num_gpus=1 --master_port $MASTER_PORT main_llm_cls.py \
     --output_dir $your_checkpopint_path/lora-$date \
     --overwrite_output_dir \
     --max_source_length $MAX_SOURCE_LENGTH \
-    --max_target_length 128 \
-    --per_device_train_batch_size 1 \
-    --per_device_eval_batch_size 1 \
+    --max_target_length 256 \
+    --per_device_train_batch_size 4 \
+    --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 2 \
     --max_steps ${MAX_STEPS} \
     --logging_steps 100 \
@@ -39,19 +39,3 @@ deepspeed --num_gpus=1 --master_port $MASTER_PORT main_llm_cls.py \
     --modules_to_save ${modules_to_save} \
     --lora_dropout ${lora_dropout} \
     --fp16
-
-# Testing Command
-deepspeed --num_gpus=1 --master_port $MASTER_PORT main_llm_cls.py \
-    --do_predict \
-    --test_file $your_data_path/test_0105.json \
-    --cache_dir $your_data_path \
-    --overwrite_cache \
-    --prompt_column input \
-    --response_column drug_code \
-    --model_name_or_path $model_name_or_path \
-    --peft_path $your_checkpopint_path/lora-$date/checkpoint-$MAX_STEPS \
-    --output_dir results/$date \
-    --overwrite_output_dir \
-    --max_source_length $MAX_SOURCE_LENGTH \
-    --max_target_length 196 \
-    --per_device_eval_batch_size 1

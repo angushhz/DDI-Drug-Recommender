@@ -5,7 +5,7 @@ train_file="0105"
 
 mark_name="0109"
 python main_distill.py --dataset mimic3 \
-                       --model_name lora \
+                       --model_name leader \
                        --train_file $train_file \
                        --train_batch_size 4 \
                        --log \

@@ -17,12 +17,12 @@ from llm.lora_cls import PeftModelForCLS
 class DistillTrainer(Trainer):
 
     def __init__(self, args, logger, device, generator):
-        
+
         self.profile_tokenizer = generator.get_profile_tokenizer()
         self.llm_tokenizer = generator.get_llm_tokenizer()
         data_dir = args.data_dir
-        self.ehr_adj = pickle.load(open(os.path.join(data_dir, 'ehr_adj_final.pkl'), 'rb'))
-        self.ddi_adj = pickle.load(open(os.path.join(data_dir, 'ddi_A_final.pkl'), 'rb'))
+        self.ehr_adj = pickle.load(open(os.path.join(data_dir, 'full/ehr_adj_final.pkl'), 'rb'))
+        self.ddi_adj = pickle.load(open(os.path.join(data_dir, 'full/ddi_A_final.pkl'), 'rb'))
         super().__init__(args, logger, device, generator)
 
         if self.args.finetune:
@@ -50,7 +50,7 @@ class DistillTrainer(Trainer):
 
 
     def _train_one_epoch(self, epoch):
-        
+
         tr_loss = 0
         nb_tr_examples, nb_tr_steps = 0, 0
         train_time = []
@@ -61,7 +61,7 @@ class DistillTrainer(Trainer):
             batch = tuple(t.to(self.device) for t in batch)
 
             train_start = time.time()
-            inputs = self._prepare_train_inputs(batch) 
+            inputs = self._prepare_train_inputs(batch)
 
             if not self.args.offline:
                 llm_inputs = {"input_ids": inputs["input_ids"], "labels": None}
@@ -101,13 +101,13 @@ class DistillTrainer(Trainer):
             self.model.load_state_dict(model_state_dict)
             self.model.to(self.device)
             test_loader = self.test_loader
-        
+
         else:
             self.logger.info("\n----------------------------------")
             self.logger.info("********** Epoch: %d eval **********" % epoch)
             desc = 'Evaluating'
             test_loader = self.eval_loader
-        
+
         self.model.eval()
 
         rx_y_preds = []
@@ -116,7 +116,7 @@ class DistillTrainer(Trainer):
         for batch in tqdm(test_loader, desc=desc):
             batch = tuple(t.to(self.device) for t in batch)
             with torch.no_grad():
-                inputs = self._prepare_eval_inputs(batch) 
+                inputs = self._prepare_eval_inputs(batch)
                 output = self.model(**inputs)
                 rx_y_preds.append(t2n(torch.sigmoid(output)))
                 rx_y_trues.append(t2n(inputs["labels"]))
@@ -124,13 +124,13 @@ class DistillTrainer(Trainer):
 
 
         self.logger.info('')
-        acc_container = metric_report(self.logger, 
-                                      np.concatenate(rx_y_preds, axis=0), 
+        acc_container = metric_report(self.logger,
+                                      np.concatenate(rx_y_preds, axis=0),
                                       np.concatenate(rx_y_trues, axis=0),
                                       self.args.therhold,
                                       self.ddi_adj)
-        acc_container_group = metric_report_group(self.logger, 
-                                                  np.concatenate(rx_y_preds, axis=0), 
+        acc_container_group = metric_report_group(self.logger,
+                                                  np.concatenate(rx_y_preds, axis=0),
                                                   np.concatenate(rx_y_trues, axis=0),
                                                   np.concatenate(seq_len, axis=0),
                                                   self.args.therhold,
@@ -139,21 +139,21 @@ class DistillTrainer(Trainer):
         return acc_container
 
 
-    
+
     def _freeze(self):
-        # freeze all of bert parameters in the model except for prompt 
+        # freeze all of bert parameters in the model except for prompt
         for name, param in self.model.named_parameters():
-    
+
             if ('profile' in name) or ("medrec" in name):   # prompt and head are activated
                 param.requires_grad = True
             else:
                 param.requires_grad = False
-    
+
 
     def _load_model(self):
 
         model_state_dict = torch.load(os.path.join(self.args.medrec_path, 'pytorch_model.bin'))
-        
+
         remove_list = []    # record the removed modules
         for k, v in model_state_dict.items():
             if ('profile' in k) or ("medrec" in k):
@@ -161,7 +161,7 @@ class DistillTrainer(Trainer):
 
         for k in remove_list:
             model_state_dict.pop(k)
-        
+
         self.model.load_state_dict(model_state_dict, strict=False)
         print("Load pretrained MedRec model")
 
