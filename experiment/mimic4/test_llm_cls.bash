@@ -4,11 +4,11 @@ modules_to_save="null"
 lora_dropout=0.1
 LR=2e-4
 model_name_or_path="resources/llama-7b"   # LLM底座模型路径，或者是huggingface hub上的模型名称
-your_data_path="data/mimic3/handled/"  # 填入数据集所在的文件夹路径
+your_data_path="data/mimic4/handled/"  # 填入数据集所在的文件夹路径
 your_checkpopint_path="saved"  # 填入用来存储模型的路径
 MAX_STEPS=3000
 MASTER_PORT=$(shuf -n 1 -i 10000-65535)
-date="0105"
+date="0104"
 MAX_SOURCE_LENGTH=1024
 
 # Testing Command
